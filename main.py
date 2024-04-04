@@ -24,4 +24,4 @@ if len(argv) > 1:
             print(line[0] + ',' + bfa.output(str(line)))
     file.close()
 else:
-    print("Invalid input; this only works with more than 2 inputs on the command line.")
+    print("Invalid input; this only works with two files as inputs on the command line.")
