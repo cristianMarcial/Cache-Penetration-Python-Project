@@ -1,5 +1,5 @@
 from sys import argv
-from math import log, ceil
+from math import ceil, log
 import csv
 
 # Number of items in the bloom filter. Its initial value is 0 because the number of lines has not been calculated yet
@@ -9,6 +9,7 @@ n = 0
 p = 0.0000001
 
 global m, k
+
 # Number of bits in the filter. Its initial value is 0 because the number of bits in the filter depends of 'n' variable.
 m = 0 
 
@@ -24,21 +25,22 @@ def countLines(entry):
     n = i
 
 # This function returns an integer resulting from the value of the "entry" parameter passed by the build-in function "hash" k times.
-def hashing(entry):
-    for i in range(k):
+def hashing(entry, k):
+    if k > 0:
         entry = hash(entry) % m
+        hashing(entry, k-1)
     return entry
 
 # This function initializes the bloom filter.
 def input(entry):
-    bloomFilter[hashing(entry)] = 1
+    bloomFilter[hashing(entry, k)] = 1
 
-# This functions outputs to the command line the original e-mail and the Bloom Filter result.
+# This functions outputs to the command line the original e-mail and the bloom filter result.
 def output(entry):
-    return "Probably in the DB" if (bloomFilter[hashing(entry)] == 1)  else "Not in the DB"
+    return "Probably in the DB" if (bloomFilter[hashing(entry, k)] == 1)  else "Not in the DB"
 
 if len(argv) > 1:
-    # The first opening consist in opening the first input file, reading it, storing the number of lines in the 'n' 
+    # The first file opening consist in opening the first input file, reading it, storing the number of lines in the 'n' 
     # variable and finally giving the variables m, k and bloomFilter a value.
     with open(argv[1]) as file:
         # This makes sure that the lines are read as an csv file.
@@ -58,14 +60,13 @@ if len(argv) > 1:
     # The first input file is opened again in order to initialize the bloom filter.
     with open(argv[1]) as file:
         csvFile = csv.reader(file)
-
         file.readline()
 
         for line in csvFile: 
             input(str(line))
     file.close()
 
-    # Finally, the file 2 is opened to test its entries against the bloom filter.
+    # Finally, the second file is opened to test its entries against the bloom filter.
     with open(argv[2]) as file:
         csvFile = csv.reader(file)
         file.readline()
