@@ -8,10 +8,10 @@ def countLines(entry):
     for line in entry:
         nl+=1
 
-n = 40
+n = 4000
 p = 0.0000001
 m = ceil((n * log(p)) / log(1 / 2**log(2) ))
-NUMBER_OF_HASH_FUNCTION = round((m / n) * log(2))
+NUMBER_OF_HASH_FUNCTION = 40 #round((m / n) * log(2))
 k = round((m / n) * log(2))
 
 bloomFilter = [0 for i in range(NUMBER_OF_HASH_FUNCTION)]
