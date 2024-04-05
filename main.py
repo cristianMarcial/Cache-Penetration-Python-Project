@@ -10,10 +10,9 @@ if len(sys.argv) > 1:
         file.readline() # This omits the first row on the file.
 
         global n, m, k, bloomFilter #This four variables are initialized below:
-        p = 0.0000001 # Probability of false positives
         n = 0 # Number of items in the bloom filter.
         for line in csv.reader(file): n+=1 # This count the number of lines in the first argument given in order to give a number to the variable 'n'.
-        m = math.ceil((n * math.log(p)) / math.log(1 / 2**math.log(2))) # Number of bits in the filter.
+        m = math.ceil((n * math.log(0.0000001)) / math.log(1 / 2**math.log(2))) # Number of bits in the filter.
         k = round((m / n) * math.log(2)) # Number of hash functions.
         bloomFilter = [False for i in range(m)]
 
