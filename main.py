@@ -6,7 +6,7 @@ def hashing(entry):
     return entry
 
 if len(argv) > 1:
-    # The first file opening consist in counting the lines in the first input and storing the value in 'n' variable
+    # The first file opening consist in counting the lines in the first input file and storing the value in 'n' variable
     with open(argv[1]) as file: 
         file.readline() # This omits the first row on the file
 
@@ -27,7 +27,7 @@ if len(argv) > 1:
             bloomFilter[hashing(str(line))] = True
     file.close()
 
-    # Finally, the second file is opened to test its entries against the bloom filter.
+    # Finally, the second input file is opened to test its entries against the bloom filter.
     with open(argv[2]) as file: 
         file.readline()
         for line in csv.reader(file): 
