@@ -1,9 +1,33 @@
-from sys import argv; from math import ceil, log; import csv
+from sys import argv; 
+from csv import reader;
+from math import ceil, log;
+import array
 
 # This function returns an integer resulting from the value of the "entry" parameter passed by the function "hash" k times.
-def hashing(entry):
-    for i in range(k): entry = hash(entry) % m
+def hashing(entry, k):
+    if k > 0:
+        entry = hash(entry) % m
+        hashing(entry, k-1)
     return entry
+
+# This returns an Array of a certain size of bits (passed in the bitsize parameter)
+def makeBitArray(bitSize):
+    # number of 32 bit integers. If bitSize != (32 * n), a record for stragglers is added
+    intSize = (bitSize >> 5) + 1 if (bitSize & 31) else bitSize >> 5
+    
+    # This creates the Array of bits. 'I' is an unsigned 32-bit integer.
+    bitArray = array.array('I') 
+    bitArray.extend((0,) * intSize)
+    return bitArray
+
+# This returns an integer with the bit at 'bitNum' set to 1.
+def setBit(arrayName, bitNum):
+    arrayName[bitNum >> 5] |= (1 << (bitNum & 31))
+    return arrayName[bitNum >> 5]
+
+# This returns a nonzero result, 2**(bit_num & 31), if the bit at 'bitNum' is set to 1.
+def testBit(arrayName, bitNum):
+    return arrayName[bitNum >> 5] & (1 << (bitNum & 31))
 
 if len(argv) > 1:
     # The first file opening consist in counting the lines in the first input file and storing the value in 'n' variable
@@ -11,25 +35,26 @@ if len(argv) > 1:
         file.readline() # This omits the first row on the file
 
         # Number of items in the bloom filter.
-        n = sum(1 for row in csv.reader(file)) 
+        n = sum(1 for row in reader(file))
 
         # Number of bits in the filter.
-        m = ceil((n * log(0.0000001)) / log(1 / 2**log(2))) 
+        m = ceil((n * log(0.0000001)) / log(1 / 2**log(2)))
 
         # Number of hash functions.
-        k = round((m / n) * log(2)) 
+        k = round((m / n) * log(2))
 
-        bloomFilter = [False for i in range(m)]
+        # BloomFilter is assigned an Array of m bits.
+        bloomFilter = makeBitArray(m)
 
-        # The first input file is read from the beginning again in order to give the bloom filter values.
+        # The first input file is read from the beginning again in order to give values to the bloom filter.
         file.seek(1)
-        for line in csv.reader(file): 
-            bloomFilter[hashing(str(line))] = True
+        for line in reader(file): 
+            setBit(bloomFilter, hashing(str(line), k))
     file.close()
 
     # Finally, the second input file is opened to test its entries against the bloom filter.
     with open(argv[2]) as file: 
         file.readline()
-        for line in csv.reader(file): 
-            print(line[0] + ',' + ("Probably in the DB" if (bloomFilter[hashing(str(line))] == True) else "Not in the DB"))
+        for line in reader(file): 
+            print(line[0] + ',' + ("Probably in the DB" if testBit(bloomFilter, hashing(str(line), k)) else "Not in the DB"))
     file.close()
