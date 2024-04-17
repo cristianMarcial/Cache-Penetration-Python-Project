@@ -13,7 +13,7 @@ def hashing(entry, k):
 # This returns an Array of a certain size of bits (passed in the bitsize parameter)
 def makeBitArray(bitSize):
     # number of 32 bit integers. If bitSize != (32 * n), a record for stragglers is added
-    intSize = (bitSize >> 5) + 1 if (bitSize & 31) else bitSize >> 5
+    intSize = (bitSize >> 5) + 1 if bitSize & 31 else bitSize >> 5
     
     # This creates the Array of bits. 'I' is an unsigned 32-bit integer.
     bitArray = array.array('I') 
