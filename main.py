@@ -22,7 +22,7 @@ def makeBitArray(bitSize):
 
 # This returns an integer with the bit at 'bitNum' set to 1.
 def setBit(arrayName, bitNum):
-    arrayName[bitNum >> 5] |= (1 << (bitNum & 31))
+    arrayName[bitNum >> 5] |= 1 << (bitNum & 31)
     return arrayName[bitNum >> 5]
 
 # This returns a nonzero result, 2**(bit_num & 31), if the bit at 'bitNum' is set to 1.
