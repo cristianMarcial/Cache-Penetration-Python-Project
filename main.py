@@ -12,12 +12,11 @@ def hashing(entry, k):
 
 # This returns an Array of a certain size of bits (passed in the bitsize parameter)
 def makeBitArray(bitSize):
-    # number of 32 bit integers. If bitSize != (32 * n), a record for stragglers is added
-    intSize = (bitSize >> 5) + 1 if bitSize & 31 else bitSize >> 5
-    
     # This creates the Array of bits. 'I' is an unsigned 32-bit integer.
     bitArray = array.array('I') 
-    bitArray.extend((0,) * intSize)
+
+    # A 0 is added to the Array for every 32 bit integers. If bitSize != (32 * n), a record for stragglers is added.
+    bitArray.extend((0,) * ((bitSize >> 5) + 1 if bitSize & 31 else bitSize >> 5))
     return bitArray
 
 # This returns an integer with the bit at 'bitNum' set to 1.
@@ -32,7 +31,7 @@ def testBit(arrayName, bitNum):
 if len(argv) > 1:
     # The first file opening consist in counting the lines in the first input file and storing the value in 'n' variable
     with open(argv[1]) as file: 
-        file.readline() # This omits the first row on the file
+        file.readline() # This omits the first row on the file.
 
         # Number of items in the bloom filter.
         n = sum(1 for row in reader(file))
@@ -43,7 +42,7 @@ if len(argv) > 1:
         # Number of hash functions.
         k = round((m / n) * log(2))
 
-        # BloomFilter is assigned an Array of m bits.
+        # BloomFilter is assigned an Array of bits.
         bloomFilter = makeBitArray(m)
 
         # The first input file is read from the beginning again in order to give values to the bloom filter.
