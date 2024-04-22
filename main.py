@@ -29,14 +29,14 @@ def testBit(arrayName, bitNum):
     return arrayName[bitNum >> 5] & (1 << (bitNum & 31))
 
 if len(argv) > 1:
-    # The first file opening consist in counting the lines in the first input file and storing the value in 'n' variable
+    # The first file opening consist in counting the lines in the first input file and storing the value in the 'n' variable
     with open(argv[1]) as file: 
         file.readline() # This omits the first row on the file.
 
         # Number of items in the bloom filter.
         n = sum(1 for row in reader(file))
 
-        # Number of bits in the filter.
+        # Number of bits in the filter necessary for the probability of a false positive to be 0.0000001.
         m = ceil((n * log(0.0000001)) / log(1 / 2**log(2)))
 
         # Number of hash functions.
