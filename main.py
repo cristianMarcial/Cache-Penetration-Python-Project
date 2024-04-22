@@ -4,10 +4,9 @@ from math import ceil, log;
 import array
 
 # This function returns an integer resulting from the value of the "entry" parameter passed by the function "hash" k times.
-def hashing(entry, k):
-    if k > 0:
+def hashing(entry):
+    for i in range(k):
         entry = hash(entry) % m
-        hashing(entry, k-1)
     return entry
 
 # This returns an Array of a certain size of bits (passed in the bitsize parameter)
@@ -48,12 +47,12 @@ if len(argv) > 1:
         # The first input file is read from the beginning again in order to give values to the bloom filter.
         file.seek(1)
         for line in reader(file): 
-            setBit(bloomFilter, hashing(str(line), k))
+            setBit(bloomFilter, hashing(str(line)))
     file.close()
 
     # Finally, the second input file is opened to test its entries against the bloom filter.
     with open(argv[2]) as file: 
         file.readline()
         for line in reader(file): 
-            print(line[0] + ',' + ("Probably in the DB" if testBit(bloomFilter, hashing(str(line), k)) else "Not in the DB"))
+            print(line[0] + ',' + ("Probably in the DB" if testBit(bloomFilter, hashing(str(line))) else "Not in the DB"))
     file.close()
